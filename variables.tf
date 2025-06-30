@@ -23,6 +23,12 @@ variable "aws_availability_zone" {
   type        = string
 }
 
+variable "additional_public_cidrs" {
+  description = "For dynamically adding more security groups to support additional CIDRs. Note the rule will be for all protocols and ports"
+  type        = list(any)
+  default     = null
+}
+
 # Instance variables
 variable "key_name" {
   description = "The name of the AWS key pair resource"
@@ -44,8 +50,8 @@ variable "ssh_connection_user" {
   type        = string
 }
 
-variable "single_instance_type" {
-  description = "The size used by the single instance"
+variable "mongodb_instance_type" {
+  description = "The size used by the MongoDB instance"
   type        = string
   default     = "t2.medium"
 }

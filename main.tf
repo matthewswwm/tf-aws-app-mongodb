@@ -25,6 +25,7 @@ provider "aws" {
 }
 
 # Data section
+## Needs to be out of date linux. Maybe an old Amazon linux 2 could work
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -67,29 +68,17 @@ data "cloudinit_config" "instance_config" {
   }
 }
 
-# Network section
-module "aws_core_network" {
-  source = "git@github.com:matt-terraform-modules/terraform-aws-core-network.git?ref=v4.0.0"
-
-  aws_core_vpc_cidr    = var.vpc_cidr
-  aws_core_subnet_cidr = var.subnet_cidr
-  aws_core_az          = var.aws_availability_zone
-  map_public_ip        = true
-
-  project_tag = var.project_tag
-}
-
 # Instance Section
 resource "aws_key_pair" "aws_keypair" {
   key_name   = var.key_name
   public_key = file(var.pub_key_file_path)
 }
 
-resource "aws_instance" "single_instance" {
+resource "aws_instance" "mongodb_instance" {
   ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = var.single_instance_type
-  subnet_id                   = module.aws_core_network.aws_subnet_id
-  vpc_security_group_ids      = [module.aws_core_network.aws_sg_id]
+  instance_type               = var.mongodb_instance_type
+  subnet_id                   = aws_subnet.aws_subnet.id
+  vpc_security_group_ids      = [aws_security_group.aws_sg.id]
   key_name                    = aws_key_pair.aws_keypair.key_name
   user_data                   = data.cloudinit_config.instance_config.rendered
   user_data_replace_on_change = true
@@ -118,3 +107,13 @@ resource "aws_instance" "single_instance" {
     Name = "${var.project_tag}_AWS_INSTANCE"
   }
 }
+
+# S3 bucket section
+## Public access available
+## No encryption
+
+# EKS section
+## Probably use the module
+## Should this be in k8s section?
+
+# IAM profile section

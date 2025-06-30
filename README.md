@@ -1,27 +1,34 @@
-# tf-aws-template
+# tf-aws-app-mongodb
 
 ## Description
 
-This repository is a template to create other Terraform AWS repositories following some standard best practices.
+Repo code for setting up the following:
 
-## Expected files
+1. MongoDB (AWS EC2)
+2. Web app that uses MongoDB (Helm? K8s)
+3. All related AWS resources for the connection
 
-The following files are expected:
+Exercise for security testing.
 
-* `main.tf`
-* `variables.tf`
-* `outputs.tf`
-* `terraform.tfvars.example`
-* `.tflint.hcl`
-    * [GitHub page](https://github.com/terraform-linters/tflint)
+### Project goals & requirements
 
-The section below details the actual template for the README:
-
-# tf-aws-lowercase-name
-
-## Description
-
-Provide a short description of the module.
+1. VM: Old linux version
+2. MongoDB:
+    1. Old ver
+    2. Credentials for app to use
+    3. Privileged AWS IAM role
+3. S3 bucket
+    1. Configure for publicly read-access accessible (bad idea)
+    2. Stores MongoDB backup
+4. Script to do the backup of Mongodb
+    1. Consider chronjob
+5. Networking:
+    1. MongoDB & App must be in same network; same VPC.
+    2. Routing for public Access
+6. App [Tasky App](https://github.com/jeffthorne/tasky):
+    1. Deployed in K8s, aka EKS
+    2. Add a txt file with sensitive data to container
+    3. App must have privileged cluster admin capabilities (bad idea)
 
 ## Interaction
 
@@ -56,7 +63,17 @@ Info and solutions (if any) for specific issues should have their own dedicated 
 
 ## To-do list
 
-* Bulleted list of items that could be worked on.
+* Get the K8s from the EKS TF aws code
+* Restrict the ports needed to access the web app instead of all
+* IAM roles for EKS
+* EKS code
+* S3 bucket
+
+### Security stuff
+
+* Trivy for IaC Scanning
+* AWS securityHub
+* AWS secret manager for DB secrets
 
 ## Requirements
 
