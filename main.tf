@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 5.90.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = ">= 3.4.5"
+    }
     cloudinit = {
       source  = "hashicorp/cloudinit"
       version = "~> 2.3.6"
@@ -32,7 +36,8 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2023.*-x86_64"]
+    # values = ["al2023-ami-2023.*-x86_64"] # Amazon Linux 2023
+    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"] # Amazon Linux 2
   }
 
   filter {
@@ -52,20 +57,20 @@ data "cloudinit_config" "instance_config" {
   base64_encode = false
 
   part {
-    filename     = "01_ud_base.sh"
+    filename     = "01_mongodb_install.sh"
     content_type = "text/x-shellscript"
 
-    content = file("${path.module}/scripts/template.sh")
+    content = file("${path.module}/scripts/mongodb_install.sh")
   }
 
-  part {
-    filename     = "02_template.sh"
-    content_type = "text/x-shellscript"
+  # part {
+  #   filename     = "02_template.sh"
+  #   content_type = "text/x-shellscript"
 
-    content = templatefile("${path.module}/templates/template.tftpl", {
-      tf_var = var.tf_var
-    })
-  }
+  #   content = templatefile("${path.module}/templates/template.tftpl", {
+  #     tf_var = var.tf_var
+  #   })
+  # }
 }
 
 # Instance Section
@@ -104,7 +109,7 @@ resource "aws_instance" "mongodb_instance" {
   }
 
   tags = {
-    Name = "${var.project_tag}_AWS_INSTANCE"
+    Name = "${var.project_tag}_MONGODB_INSTANCE"
   }
 }
 
@@ -112,7 +117,41 @@ resource "aws_instance" "mongodb_instance" {
 ## Public access available
 ## No encryption
 
+
+#WIP
 # EKS section
+
+# module "eks" {
+#   source  = "terraform-aws-modules/eks/aws"
+#   version = "~> 20.31"
+
+#   cluster_name    = ""
+#   cluster_version = "1.31"
+
+#   # Optional
+#   cluster_endpoint_public_access = true
+
+#   # Optional: Adds the current caller identity as an administrator via cluster access entry
+#   enable_cluster_creator_admin_permissions = true
+
+#   cluster_compute_config = {
+#     enabled    = true
+#     node_pools = ["general-purpose"]
+#   }
+
+#   vpc_id     = aws_vpc.aws_vpc.id
+#   subnet_ids = ["subnet-abcde012", "subnet-bcde012a", "subnet-fghi345a"]
+
+#     tags = {
+#       Project     = var.project_tag
+#       Owner       = var.owner_tag
+#       Environment = var.environment_tag
+#       ManagedBy   = "Terraform"
+#     }
+# }
+
+
+
 ## Probably use the module
 ## Should this be in k8s section?
 

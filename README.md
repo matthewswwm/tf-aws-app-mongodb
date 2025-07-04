@@ -57,11 +57,44 @@ General troubleshooting guide information should be added here.
 * Find the logs in `/var/log`, specifically `/var/log/cloud-init-output.log`
 * Find the scripts in `/var/lib/cloud/instance/scripts`
 
-### Issue 1
+### Forgot admin password (WIP)
 
-Info and solutions (if any) for specific issues should have their own dedicated section.
+__IMPORTANT: this messed up the DB set up. Probably the combination of using flags and not resetting from systemctl.__
 
-## To-do list
+In case you typoed or forgot your admin password. In Production this should never work
+
+1. Stop MongoDB: `sudo systemctl stop mongod`
+2. Restart MongoDB without auth: `sudo mongod --dbpath /var/lib/mongo --logpath /var/log/mongodb/mongod.log --fork --noauth`
+3. Connect to MongoDB and set a new password
+
+    ```shell
+    mongosh
+
+    use admin
+    db.changeUserPassword("myUserAdmin", "newpassword")
+
+    # or
+
+    db.createUser({
+    user: "myUserAdmin",
+    pwd: "newpassword",
+    roles: [ { role: "root", db: "admin" } ]
+    })
+    ```
+
+4. Kill mongo: `sudo pkill mongod`
+5. Restart MongoDB: `sudo systemctl start mongod`
+
+### Misc troubleshooting commands
+
+1. Network: Troubleshoot with: `sudo ss -tulnp | grep mongod`
+2. Mongo settings: `mongosh --eval "db.adminCommand({ getCmdLineOpts: 1 })"`
+3. systemctl: `sudo systemctl status mongod`
+4. process: `ps -eo user,pid,cmd | grep [m]ongo`
+
+## To-do list (now)
+
+* VM privileged role
 
 * Get the K8s from the EKS TF aws code
 * Restrict the ports needed to access the web app instead of all
@@ -69,11 +102,21 @@ Info and solutions (if any) for specific issues should have their own dedicated 
 * EKS code
 * S3 bucket
 
+## To-do list (after)
+
+* MongoDB script
+    * Template the MongoDB version
+    * Template whether it's on Amazon Linux 2 or Amazon Linux 2023
+    * Automate creation of Mongo Admin
+    * Automate creation of Mongo tasky user
+
 ### Security stuff
 
 * Trivy for IaC Scanning
 * AWS securityHub
 * AWS secret manager for DB secrets
+
+* The MongoDB is configured to listen to all network interfaces. In a zero trust setup, how should this be configured to limit where it should listen to?
 
 ## Requirements
 
