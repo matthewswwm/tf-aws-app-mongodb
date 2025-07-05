@@ -1,18 +1,23 @@
-# Template Variables
-tf_var = 
-
-# Network variables
-vpc_cidr              = 
-subnet_cidr           = 
-aws_availability_zone = 
-
 # Instance variables
 key_name            = 
 pub_key_file_path   = 
 pri_key_file_path   = 
 ssh_connection_user = 
 
-single_instance_type  = 
+# EKS variables
+eks_cluster_name = 
+eks_subnet_cidrs = 
+
+# Network variables
+vpc_cidr              = 
+subnet_cidr           = 
+aws_availability_zone = 
+
+# K8s variables
+jwt_secret_key = 
+textfile       = 
+
+image_name = 
 
 # General variables
 aws_region      = 
@@ -20,5 +25,10 @@ project_tag     =
 owner_tag       = 
 environment_tag = 
 
-## This should be in another tfvars file, such as secret.tfvars
-secret_var = 
+# MongoDB variables
+# These secret variables should be moved into a secret.tfvars file
+mongo_admin_username = 
+mongo_admin_password = 
+
+mongo_tasky_username = 
+mongo_tasky_password = 

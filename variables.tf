@@ -1,32 +1,26 @@
-# Template Variables
-variable "tf_var" {
-  description = "This variable is used in the terraform template"
+# MongoDB variables
+variable "mongo_admin_username" {
+  description = "The username value of the MongoDB admin created at start"
   type        = string
-  default     = "I am a variable"
+  sensitive   = true
 }
 
-# Network variables
-variable "vpc_cidr" {
-  description = "The cidr block range of IP addresses for the virtual private cloud"
+variable "mongo_admin_password" {
+  description = "The password value of the MongoDB admin created at start"
   type        = string
-  default     = "192.0.0.0/16"
+  sensitive   = true
 }
 
-variable "subnet_cidr" {
-  description = "The cidr block range of IP addresses for the subnet"
+variable "mongo_tasky_username" {
+  description = "The username value of the tasky user to access MongoDB"
   type        = string
-  default     = "192.0.0.0/24"
+  sensitive   = true
 }
 
-variable "aws_availability_zone" {
-  description = "The availability zone within the provider region the resources will be running, e.g. eu-west-1a and ap-southeast-1b"
+variable "mongo_tasky_password" {
+  description = "The password value of the tasky user to access MongoDB"
   type        = string
-}
-
-variable "additional_public_cidrs" {
-  description = "For dynamically adding more security groups to support additional CIDRs. Note the rule will be for all protocols and ports"
-  type        = list(any)
-  default     = null
+  sensitive   = true
 }
 
 # Instance variables
@@ -54,6 +48,85 @@ variable "mongodb_instance_type" {
   description = "The size used by the MongoDB instance"
   type        = string
   default     = "t2.medium"
+}
+
+# EKS variables
+variable "eks_cluster_name" {
+  description = "Name of the EKS cluster"
+  type        = string
+}
+
+variable "eks_cluster_ver" {
+  description = "Version of the EKS cluster"
+  type        = string
+  default     = "1.31"
+}
+
+variable "eks_subnet_cidrs" {
+  description = "List of subnet CIDRs for EKS"
+  type        = list(string)
+  default     = []
+}
+
+# Network variables
+variable "vpc_cidr" {
+  description = "The cidr block range of IP addresses for the virtual private cloud"
+  type        = string
+  default     = "192.0.0.0/16"
+}
+
+variable "subnet_cidr" {
+  description = "The cidr block range of IP addresses for the subnet"
+  type        = string
+  default     = "192.0.0.0/24"
+}
+
+variable "aws_availability_zone" {
+  description = "The availability zone within the provider region the resources will be running, e.g. eu-west-1a and ap-southeast-1b"
+  type        = string
+}
+
+variable "additional_public_cidrs" {
+  description = "For dynamically adding more security groups to support additional CIDRs. Note the rule will be for all protocols and ports"
+  type        = list(any)
+  default     = null
+}
+
+# K8s variables
+variable "jwt_secret_key" {
+  description = "Value of the SECRET_KEY used by tasky app"
+  type        = string
+  sensitive   = true
+}
+
+variable "textfile" {
+  description = "The name of the text file being added to the application pod"
+  type        = string
+  default     = "me.txt"
+}
+
+## App-related
+variable "image_name" {
+  description = "The name of the image that contains the app"
+  type        = string
+}
+
+variable "app_name" {
+  description = "The name of the app"
+  type        = string
+  default     = "tasky"
+}
+
+variable "target_port" {
+  description = "The port that the app is listening on"
+  type        = string
+  default     = "8080"
+}
+
+variable "service_port" {
+  description = "The port exposed to service external connection"
+  type        = string
+  default     = "80"
 }
 
 # General variables

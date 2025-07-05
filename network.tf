@@ -1,6 +1,5 @@
-
-## Missing details for EKS & Instance connection
-### Internet, app, etc
+# network.tf
+# Refactored into another file for better readability
 
 # Data section
 data "http" "my_ip_address" {
@@ -30,6 +29,33 @@ resource "aws_subnet" "aws_subnet" {
 
   tags = {
     Name = "${var.project_tag}_SUBNET"
+  }
+}
+
+## EKS subnets
+resource "aws_subnet" "eks_subnet_1" {
+  vpc_id                  = aws_vpc.aws_vpc.id
+  cidr_block              = var.eks_subnet_cidrs[0]
+  availability_zone       = "${var.aws_region}a"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name                                            = "${var.project_tag}_EKS_SUBNET_A"
+    "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"
+    "kubernetes.io/role/elb"                        = "1"
+  }
+}
+
+resource "aws_subnet" "eks_subnet_2" {
+  vpc_id                  = aws_vpc.aws_vpc.id
+  cidr_block              = var.eks_subnet_cidrs[1]
+  availability_zone       = "${var.aws_region}b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name                                            = "${var.project_tag}_EKS_SUBNET_B"
+    "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"
+    "kubernetes.io/role/elb"                        = "1"
   }
 }
 
@@ -96,6 +122,15 @@ resource "aws_security_group_rule" "additional_cidr_rules" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = var.additional_public_cidrs
+  security_group_id = aws_security_group.aws_sg.id
+}
+
+resource "aws_security_group_rule" "public_http_rule" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.aws_sg.id
 }
 

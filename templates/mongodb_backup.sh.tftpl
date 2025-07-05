@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+### mongodb_backup.sh
+# Runs a backup of the MongoDB to a S3 bucket.
+# Tested on Amazon Linux 2
+
+set -e
+set -x
+
+TIMESTAMP=$(date +%F-%H-%M)
+BACKUP_DIR="/tmp/mongobackup-$TIMESTAMP"
+BACKUP_TAR="/tmp/mongobackup-$TIMESTAMP.tar.gz"
+S3_BUCKET="s3://${bucket_name}"
+
+echo "[INFO]: Starting MongoDB backup at $TIMESTAMP"
+
+# Dump the MongoDB database
+mongodump -u "${mongo_admin_username}" -p "${mongo_admin_password}" --authenticationDatabase admin --out "$BACKUP_DIR"
+
+# Compress the dump
+tar -czf "$BACKUP_TAR" -C /tmp "mongobackup-$TIMESTAMP"
+
+# Upload to S3
+aws s3 cp "$BACKUP_TAR" "$S3_BUCKET/backups/"
+
+# Clean up local files
+rm -rf "$BACKUP_DIR" "$BACKUP_TAR"
+
+echo "[INFO]: MongoDB backup completed and uploaded to S3."
