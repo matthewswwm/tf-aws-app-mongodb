@@ -13,12 +13,6 @@ vpc_cidr              =
 subnet_cidr           = 
 aws_availability_zone = 
 
-# K8s variables
-jwt_secret_key = 
-textfile       = 
-
-image_name = 
-
 # General variables
 aws_region      = 
 project_tag     = 

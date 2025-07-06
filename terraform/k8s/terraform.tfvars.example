@@ -1,0 +1,17 @@
+# EKS variables
+eks_cluster_name = 
+
+# K8s variables
+jwt_secret_key = 
+textfile       = 
+
+image_name = 
+
+# General variables
+aws_region  = 
+project_tag = 
+
+# MongoDB variables
+# These secret variables should be moved into a secret.tfvars file
+mongo_tasky_username = 
+mongo_tasky_password = 

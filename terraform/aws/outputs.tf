@@ -18,7 +18,18 @@ output "s3_backups_http_url" {
   value       = "https://${aws_s3_bucket.mongdb_bucket.bucket}.s3.${var.aws_region}.amazonaws.com/backups/"
 }
 
-output "tasky_app_url" {
-  description = "Public URL to access the Tasky"
-  value       = "http://${kubernetes_ingress_v1.app_ingress.status[0].load_balancer[0].ingress[0].hostname}"
-}
+# For subsequent project's data source
+# output "eks_cluster_name" {
+#   description = "The EKS cluster name for used as a data source"
+#   value       = module.eks.cluster_name
+# }
+
+# output "eks_cluster_endpoint" {
+#   description = "The EKS cluster endpoint"
+#   value       = module.eks.cluster_endpoint
+# }
+
+# output "eks_cluster_ca" {
+#   description = "The EKS cluster name"
+#   value       = module.eks.cluster_certificate_authority_data[0].data
+# }

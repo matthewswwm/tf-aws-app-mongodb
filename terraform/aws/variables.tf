@@ -93,41 +93,41 @@ variable "additional_public_cidrs" {
 }
 
 # K8s variables
-variable "jwt_secret_key" {
-  description = "Value of the SECRET_KEY used by tasky app"
-  type        = string
-  sensitive   = true
-}
+# variable "jwt_secret_key" {
+#   description = "Value of the SECRET_KEY used by tasky app"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "textfile" {
-  description = "The name of the text file being added to the application pod"
-  type        = string
-  default     = "me.txt"
-}
+# variable "textfile" {
+#   description = "The name of the text file being added to the application pod"
+#   type        = string
+#   default     = "me.txt"
+# }
 
-## App-related
-variable "image_name" {
-  description = "The name of the image that contains the app"
-  type        = string
-}
+# ## App-related
+# variable "image_name" {
+#   description = "The name of the image that contains the app"
+#   type        = string
+# }
 
-variable "app_name" {
-  description = "The name of the app"
-  type        = string
-  default     = "tasky"
-}
+# variable "app_name" {
+#   description = "The name of the app"
+#   type        = string
+#   default     = "tasky"
+# }
 
-variable "target_port" {
-  description = "The port that the app is listening on"
-  type        = string
-  default     = "8080"
-}
+# variable "target_port" {
+#   description = "The port that the app is listening on"
+#   type        = string
+#   default     = "8080"
+# }
 
-variable "service_port" {
-  description = "The port exposed to service external connection"
-  type        = string
-  default     = "80"
-}
+# variable "service_port" {
+#   description = "The port exposed to service external connection"
+#   type        = string
+#   default     = "80"
+# }
 
 # General variables
 variable "aws_region" {

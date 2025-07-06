@@ -1,15 +1,47 @@
 # k8s.tf
 # For everything related to the K8s provider & related resources. It relies on the AWS EKS module to be created in order to connect and apply the K8s resources.
 
-# EKS data section for the K8s provider
+terraform {
+  required_version = ">= 1.11.1"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.90.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.37.1"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.2.4"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+# Data section
 data "aws_eks_cluster" "this" {
-  name       = module.eks.cluster_name
-  depends_on = [module.eks.cluster_name]
+  name = var.eks_cluster_name
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name       = module.eks.cluster_name
-  depends_on = [module.eks.cluster_name]
+  name = var.eks_cluster_name
+}
+
+data "aws_instance" "mongodb_instance" {
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project_tag}_MONGODB_INSTANCE"]
+  }
+
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
 }
 
 provider "kubernetes" {
@@ -32,7 +64,7 @@ resource "kubernetes_secret" "app_secret" {
   }
 
   data = {
-    MONGODB_URI = "mongodb://${var.mongo_tasky_username}:${var.mongo_tasky_password}@${aws_instance.mongodb_instance.private_ip}:27017/admin"
+    MONGODB_URI = "mongodb://${var.mongo_tasky_username}:${var.mongo_tasky_password}@${data.aws_instance.mongodb_instance.private_ip}:27017/admin"
     SECRET_KEY  = var.jwt_secret_key
   }
 
@@ -203,3 +235,11 @@ resource "kubernetes_ingress_v1" "app_ingress" {
   }
 }
 
+# Wait some time in order for the hostname of the ingress to be populated. Has to be the final wait.
+resource "null_resource" "wait_30_seconds" {
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
+
+  depends_on = [kubernetes_ingress_v1.app_ingress, kubernetes_deployment.app_deployment]
+}
