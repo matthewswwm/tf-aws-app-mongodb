@@ -176,6 +176,15 @@ resource "aws_security_group" "eks" {
   }
 }
 
+# Unused, but kept for reference
+resource "aws_vpc_security_group_ingress_rule" "eks_additional_cidr" {
+  for_each = var.additional_public_cidrs != null ? toset(var.additional_public_cidrs) : []
+
+  ip_protocol       = "-1"
+  cidr_ipv4         = each.value
+  security_group_id = aws_security_group.eks.id
+}
+
 ## "Global Rules"
 resource "aws_vpc_security_group_ingress_rule" "my_ip" {
   for_each = {
