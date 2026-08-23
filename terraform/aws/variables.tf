@@ -29,14 +29,14 @@ variable "key_name" {
   type        = string
 }
 
-variable "pub_key_file_path" {
-  description = "Path to the public key file on the system"
+variable "pub_key_content" {
+  description = "The EC2 public key content"
   type        = string
 }
-
-variable "pri_key_file_path" {
-  description = "Path to the private key file on the system"
+variable "pri_key_content" {
+  description = "The EC2 private key content"
   type        = string
+  sensitive   = true
 }
 
 variable "ssh_connection_user" {
@@ -59,11 +59,17 @@ variable "eks_cluster_name" {
 variable "eks_cluster_ver" {
   description = "Version of the EKS cluster"
   type        = string
-  default     = "1.31"
+  default     = "1.35"
 }
 
-variable "eks_subnet_cidrs" {
-  description = "List of subnet CIDRs for EKS"
+variable "eks_public_subnet_cidrs" {
+  description = "List of CIDRs for EKS public subnet"
+  type        = list(string)
+  default     = []
+}
+
+variable "eks_private_subnet_cidrs" {
+  description = "List of CIDRs for EKS private subnet"
   type        = list(string)
   default     = []
 }
@@ -75,59 +81,23 @@ variable "vpc_cidr" {
   default     = "192.0.0.0/16"
 }
 
-variable "subnet_cidr" {
-  description = "The cidr block range of IP addresses for the subnet"
+variable "instance_subnet_cidr" {
+  description = "The cidr block range of IP addresses for the EC2 instance subnet"
   type        = string
   default     = "192.0.0.0/24"
 }
 
-variable "aws_availability_zone" {
-  description = "The availability zone within the provider region the resources will be running, e.g. eu-west-1a and ap-southeast-1b"
-  type        = string
+variable "aws_availability_zone_list" {
+  description = "A list of availability zones within the provider region the resources will be running, e.g. eu-west-1a and ap-southeast-1b. Minimum 2 are needed for the EKS setup"
+  type        = list(string)
+  default     = ["eu-west-2a", "eu-west-2b"]
 }
 
 variable "additional_public_cidrs" {
-  description = "For dynamically adding more security groups to support additional CIDRs. Note the rule will be for all protocols and ports"
+  description = "For dynamically adding more security groups to support additional CIDRs. Note the ingress rule will be for all protocols and ports"
   type        = list(any)
   default     = null
 }
-
-# K8s variables
-# variable "jwt_secret_key" {
-#   description = "Value of the SECRET_KEY used by tasky app"
-#   type        = string
-#   sensitive   = true
-# }
-
-# variable "textfile" {
-#   description = "The name of the text file being added to the application pod"
-#   type        = string
-#   default     = "me.txt"
-# }
-
-# ## App-related
-# variable "image_name" {
-#   description = "The name of the image that contains the app"
-#   type        = string
-# }
-
-# variable "app_name" {
-#   description = "The name of the app"
-#   type        = string
-#   default     = "tasky"
-# }
-
-# variable "target_port" {
-#   description = "The port that the app is listening on"
-#   type        = string
-#   default     = "8080"
-# }
-
-# variable "service_port" {
-#   description = "The port exposed to service external connection"
-#   type        = string
-#   default     = "80"
-# }
 
 # General variables
 variable "aws_region" {

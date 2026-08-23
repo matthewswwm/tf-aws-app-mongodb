@@ -33,7 +33,7 @@ There are more resources, but the above are the key ones. They are deliberately 
     1. Publicly accessible (read-only)
     2. Stores MongoDB backup
 4. EKS:
-    1. Same network as MongoDB VM
+    1. Same network as MongoDB VM [Needs to be changed]
 5. [Tasky App](https://github.com/jeffthorne/tasky):
     1. Deployed in EKS
     2. Connects to MongoDB

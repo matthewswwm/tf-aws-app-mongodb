@@ -74,15 +74,16 @@ data "cloudinit_config" "instance_config" {
 # Instance Section
 resource "aws_key_pair" "aws_keypair" {
   key_name   = var.key_name
-  public_key = file(var.pub_key_file_path)
+  public_key = var.pub_key_content
 }
 
 resource "aws_instance" "mongodb_instance" {
   ami                         = data.aws_ami.amazon_linux.id
   instance_type               = var.mongodb_instance_type
-  subnet_id                   = aws_subnet.aws_subnet.id
-  vpc_security_group_ids      = [aws_security_group.aws_sg.id]
+  subnet_id                   = aws_subnet.mongodb.id
+  vpc_security_group_ids      = [aws_security_group.mongodb.id]
   key_name                    = aws_key_pair.aws_keypair.key_name
+  associate_public_ip_address = "true"
   user_data                   = data.cloudinit_config.instance_config.rendered
   iam_instance_profile        = aws_iam_instance_profile.csp_admin_instance_profile.name
   user_data_replace_on_change = true
@@ -91,7 +92,7 @@ resource "aws_instance" "mongodb_instance" {
     host        = self.public_ip
     type        = "ssh"
     user        = var.ssh_connection_user
-    private_key = file(var.pri_key_file_path)
+    private_key = var.pri_key_content
   }
 
   # Create directories & chron entry
@@ -99,7 +100,7 @@ resource "aws_instance" "mongodb_instance" {
     inline = [
       "mkdir /tmp/scripts/",
       "mkdir /tmp/logs/",
-      "(crontab -l 2>/dev/null; echo \"33 * * * * /bin/bash /tmp/scripts/mongodb_backup.sh >> /tmp/logs/mongodb_backup.log 2>&1\") | sudo crontab -"
+      "(sudo crontab -l 2>/dev/null; echo \"33 * * * * /bin/bash /tmp/scripts/mongodb_backup.sh >> /tmp/logs/mongodb_backup.log 2>&1\") | sudo crontab -"
     ]
   }
 
@@ -218,13 +219,14 @@ module "eks" {
     enabled    = true
     node_pools = ["general-purpose"]
   }
-  cluster_endpoint_public_access = true
+  cluster_endpoint_public_access       = true
+  cluster_endpoint_public_access_cidrs = ["${chomp(data.http.my_ip_address.response_body)}/32"]
 
   enable_cluster_creator_admin_permissions = true
 
-  vpc_id                    = aws_vpc.aws_vpc.id
-  subnet_ids                = [aws_subnet.eks_subnet_1.id, aws_subnet.eks_subnet_2.id]
-  cluster_security_group_id = aws_security_group.aws_sg.id
+  vpc_id = aws_vpc.aws_vpc.id
+  subnet_ids = aws_subnet.eks_private[*].id
+  cluster_security_group_id = aws_security_group.eks.id
 
   tags = {
     Project     = var.project_tag
