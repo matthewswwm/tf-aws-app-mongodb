@@ -206,6 +206,8 @@ data "aws_iam_policy_document" "mongdb_bucket_public_read" {
 resource "aws_s3_bucket_policy" "mongdb_bucket_pub_read_pol" {
   bucket = aws_s3_bucket.mongdb_bucket.id
   policy = data.aws_iam_policy_document.mongdb_bucket_public_read.json
+
+  depends_on = [aws_s3_bucket_public_access_block.mongdb_bucket_pub_access]
 }
 
 # EKS module section

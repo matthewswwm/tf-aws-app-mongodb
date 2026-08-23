@@ -150,13 +150,13 @@ resource "aws_vpc_security_group_ingress_rule" "mongodb_additional_cidr" {
   security_group_id = aws_security_group.mongodb.id
 }
 
-# resource "aws_vpc_security_group_ingress_rule" "mongodb_ssh" {
-#   from_port         = 22
-#   to_port           = 22
-#   ip_protocol       = "tcp"
-#   cidr_ipv4         = "0.0.0.0/0"
-#   security_group_id = aws_security_group.mongodb.id
-# }
+resource "aws_vpc_security_group_ingress_rule" "mongodb_ssh" {
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  security_group_id = aws_security_group.mongodb.id
+}
 
 resource "aws_vpc_security_group_ingress_rule" "mongodb_eks_private" {
   count = length(var.eks_private_subnet_cidrs)
@@ -204,16 +204,16 @@ resource "aws_vpc_security_group_ingress_rule" "my_ip" {
 
 ## Egress rules section
 # For ease of development & access during setup
-resource "aws_vpc_security_group_ingress_rule" "vpc_self" {
-  for_each = {
-    mongodb = aws_security_group.mongodb.id
-    eks     = aws_security_group.eks.id
-  }
+# resource "aws_vpc_security_group_ingress_rule" "vpc_self" {
+#   for_each = {
+#     mongodb = aws_security_group.mongodb.id
+#     eks     = aws_security_group.eks.id
+#   }
 
-  ip_protocol       = "-1"
-  cidr_ipv4         = var.vpc_cidr
-  security_group_id = each.value
-}
+#   ip_protocol       = "-1"
+#   cidr_ipv4         = var.vpc_cidr
+#   security_group_id = each.value
+# }
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   for_each = {
