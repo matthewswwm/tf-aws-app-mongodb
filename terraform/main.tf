@@ -3,6 +3,12 @@
 
 terraform {
   required_version = ">= 1.11.1"
+
+  # Org/workspace intentionally not hardcoded here — sourced from TF_CLOUD_ORGANIZATION /
+  # TF_WORKSPACE env vars at init time (set by the GitHub Actions pipeline), so nothing
+  # identifiable lives in this committed file.
+  cloud {}
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

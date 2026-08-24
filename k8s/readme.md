@@ -2,6 +2,18 @@
 
 ## Description
 
+sub directory for the K8s YAML files
+
+
+
+
+
+
+
+
+
+
+
 The directory for the K8s resources that. Retrieves some data from AWS.
 
 ## Troubleshooting & debugging
