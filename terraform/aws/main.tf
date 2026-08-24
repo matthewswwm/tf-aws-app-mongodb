@@ -222,7 +222,7 @@ module "eks" {
     node_pools = ["general-purpose"]
   }
   cluster_endpoint_public_access       = true
-  cluster_endpoint_public_access_cidrs = ["${chomp(data.http.my_ip_address.response_body)}/32"]
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"] ## For ease of access for multiple SaaS & local laptop access 
 
   enable_cluster_creator_admin_permissions = true
 
