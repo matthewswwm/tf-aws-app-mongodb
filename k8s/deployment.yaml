@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasky
+  namespace: tasky
+  labels:
+    app: tasky
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasky
+  template:
+    metadata:
+      labels:
+        app: tasky
+    spec:
+      containers:
+        - name: tasky
+          image: matthewsong/tasky:latest # TODO: This should be updated to not use latest as it could be vulnerable to an attack.
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: tasky-env-secrets
+          volumeMounts:
+            - name: text-volume
+              mountPath: /tmp/tasky
+      volumes:
+        - name: text-volume
+          configMap:
+            name: textfile

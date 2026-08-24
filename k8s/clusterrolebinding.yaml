@@ -1,0 +1,14 @@
+# Intentional over-privilege per exercise spec: binds the app's default ServiceAccount
+# in the tasky namespace to the built-in cluster-admin ClusterRole.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tasky-admin-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: tasky

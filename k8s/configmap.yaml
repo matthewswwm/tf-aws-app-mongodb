@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: textfile
+  namespace: tasky
+data:
+  exercisename.txt: |
+    Your name here
+    Expedition 33
+    I am a password
+    -----BEGIN RSA PRIVATE KEY-----
+
