@@ -232,8 +232,8 @@ module "eks" {
 
   enable_cluster_creator_admin_permissions = true
 
-  vpc_id = aws_vpc.aws_vpc.id
-  subnet_ids = aws_subnet.eks_private[*].id
+  vpc_id                    = aws_vpc.aws_vpc.id
+  subnet_ids                = aws_subnet.eks_private[*].id
   cluster_security_group_id = aws_security_group.eks.id
 
   tags = {

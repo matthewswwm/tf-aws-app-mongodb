@@ -110,10 +110,11 @@ If you forget to select which DB you're working with, e.g. `admin`, it will defa
 | [aws_subnet.mongodb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_vpc.aws_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_vpc_security_group_egress_rule.all](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.eks_additional_cidr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.mongodb_additional_cidr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.mongodb_eks_private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.mongodb_ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.my_ip](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.vpc_self](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_ami.amazon_linux](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_iam_policy_document.ec2_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.mongdb_bucket_public_read](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -141,9 +142,9 @@ If you forget to select which DB you're working with, e.g. `admin`, it will defa
 | <a name="input_mongo_tasky_username"></a> [mongo\_tasky\_username](#input\_mongo\_tasky\_username) | The username value of the tasky user to access MongoDB | `string` | n/a | yes |
 | <a name="input_mongodb_instance_type"></a> [mongodb\_instance\_type](#input\_mongodb\_instance\_type) | The size used by the MongoDB instance | `string` | `"t2.medium"` | no |
 | <a name="input_owner_tag"></a> [owner\_tag](#input\_owner\_tag) | Owner tag applied to all resources | `string` | n/a | yes |
-| <a name="input_pri_key_content"></a> [pri\_key\_content](#input\_pri\_key\_content) | n/a | `string` | n/a | yes |
+| <a name="input_pri_key_content"></a> [pri\_key\_content](#input\_pri\_key\_content) | The EC2 private key content | `string` | n/a | yes |
 | <a name="input_project_tag"></a> [project\_tag](#input\_project\_tag) | The tag for the name/id of the project the resource is associated with. Can also be used in the name of resources | `string` | n/a | yes |
-| <a name="input_pub_key_content"></a> [pub\_key\_content](#input\_pub\_key\_content) | n/a | `string` | n/a | yes |
+| <a name="input_pub_key_content"></a> [pub\_key\_content](#input\_pub\_key\_content) | The EC2 public key content | `string` | n/a | yes |
 | <a name="input_ssh_connection_user"></a> [ssh\_connection\_user](#input\_ssh\_connection\_user) | The default SSH user used for the connection, determined by the AMI selected | `string` | n/a | yes |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The cidr block range of IP addresses for the virtual private cloud | `string` | `"192.0.0.0/16"` | no |
 
